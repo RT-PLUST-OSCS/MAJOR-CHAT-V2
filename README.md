@@ -37,14 +37,7 @@ pip install flask && python app.py
 - pip package manager
 
 ### Step-by-Step Installation
-```bash
-# Clone repository
-git clone https://github.com/yourusername/MAJOR-Chat.git
-cd MAJOR-Chat
-
-# Install requirements
-pip install -r requirements.txt
-
+```
 # Run MAJOR Chat
 python app.py
 ```
