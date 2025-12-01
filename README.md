@@ -242,4 +242,5 @@ cloudflared tunnel --url http://localhost:5000  # Secure sharing
 
 ---
 **Built with ❤️ for secure, private, and temporary communications**
-```
+
+**BY 😏 RT PLUST & 🐺 WOLF SCRIPT
