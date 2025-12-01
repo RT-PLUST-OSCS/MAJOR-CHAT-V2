@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MAJOR CHAT</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .chat-container { max-width: 600px; margin: 0 auto; border: 1px solid #ccc; border-radius: 10px; padding: 20px; }
+        .messages { height: 400px; overflow-y: auto; border: 1px solid #eee; padding: 10px; margin-bottom: 10px; }
+        .message { margin-bottom: 10px; padding: 8px; border-radius: 5px; }
+        .user-message { background-color: #e3f2fd; text-align: left; }
+        .bot-message { background-color: #f5f5f5; text-align: right; }
+        .input-area { display: flex; gap: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h2>MAJOR CHAT made with love and private</h2>
+        <div class="messages" id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="send your massage here...">
+            <button onclick="sendMessage()">send</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSender = 'user1';
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                fetch('/send_message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        sender: currentSender
+                    })
+                }).then(() => {
+                    input.value = '';
+                    loadMessages();
+                });
+            }
+        }
+        
+        function loadMessages() {
+            fetch('/get_messages')
+                .then(response => response.json())
+                .then(messages => {
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML = '';
+                    
+                    messages.forEach(msg => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = `message ${msg.sender === currentSender ? 'user-message' : 'bot-message'}`;
+                        messageDiv.innerHTML = `
+                            <strong>${msg.sender}:</strong> ${msg.text}
+                            <br><small>${msg.timestamp}</small>
+                        `;
+                        messagesDiv.appendChild(messageDiv);
+                    });
+                    
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                });
+        }
+        
+        // 
+        setInterval(loadMessages, 2000);
+        loadMessages();
+        
+        // إsend Enter
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
